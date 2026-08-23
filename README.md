@@ -1,3 +1,8 @@
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="assets/app-icon-dark.png">
+  <img src="assets/app-icon-light.png" alt="Denkzettel" width="160">
+</picture>
+
 [Deutsch](README.md) | [English](README.en.md) | [Änderungsprotokoll](#änderungsprotokoll) | [TODO](TODO.md)
 
 # Denkzettel
