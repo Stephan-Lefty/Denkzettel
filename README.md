@@ -221,6 +221,15 @@ Vokabular. Genau dabei ist Vosk deutlich schwächer, und Nachkorrigieren
 kostet mehr Zeit, als das größere Modell an Rechenzeit braucht. Beides
 läuft offline, insofern ändert sich am Grundsatz nichts.
 
+## Lizenz
+
+MIT, siehe [LICENSE](LICENSE).
+
+Nicht unter diese Lizenz fallen die Bestandteile, die Denkzettel nur
+benutzt und nicht mitliefert: [whisper.cpp](https://github.com/ggml-org/whisper.cpp)
+(ebenfalls MIT) und die Spracherkennungs-Modelle, die `install.sh`
+herunterlädt.
+
 ## Änderungsprotokoll
 
 ### 0.1.0 (2026-08-23)

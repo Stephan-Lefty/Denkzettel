@@ -226,6 +226,14 @@ That is exactly where Vosk is noticeably weaker, and correcting the
 result afterwards costs more time than the larger model costs in compute.
 Both run offline, so the principle is unchanged.
 
+## License
+
+MIT, see [LICENSE](LICENSE).
+
+This does not cover the parts Denkzettel merely uses rather than ships:
+[whisper.cpp](https://github.com/ggml-org/whisper.cpp) (also MIT) and the
+speech recognition models downloaded by `install.sh`.
+
 ## Changelog
 
 ### 0.1.0 (2026-08-23)
