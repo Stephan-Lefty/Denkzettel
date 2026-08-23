@@ -230,6 +230,17 @@ benutzt und nicht mitliefert: [whisper.cpp](https://github.com/ggml-org/whisper.
 (ebenfalls MIT) und die Spracherkennungs-Modelle, die `install.sh`
 herunterlädt.
 
+**Ebenfalls ausgenommen sind Name und Erscheinungsbild**: „Denkzettel"
+und die Symbole in [assets/](assets/). Sie sind aus dem App-Symbol von
+[DialOS](https://github.com/Stephan-Lefty/DialOS) abgeleitet – dieselbe
+Dame, derselbe Kreis, nur schreibt statt der Schallwellen ein Stift mit.
+Für DialOS gilt derselbe Vorbehalt, und er wird hier fortgeschrieben:
+Den Code darf jeder nehmen, umbauen und weitergeben; das Ergebnis
+weiterhin „Denkzettel" zu nennen oder mit diesem Gesicht auszuliefern,
+ist nicht gedeckt. Sonst trägt fremde Arbeit ein Kennzeichen, für das
+jemand anderes einsteht. Näheres in
+[DialOS/docs/lizenzen.md](https://github.com/Stephan-Lefty/DialOS/blob/master/docs/lizenzen.md).
+
 ## Änderungsprotokoll
 
 ### 0.1.0 (2026-08-23)

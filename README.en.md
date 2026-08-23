@@ -234,6 +234,17 @@ This does not cover the parts Denkzettel merely uses rather than ships:
 [whisper.cpp](https://github.com/ggml-org/whisper.cpp) (also MIT) and the
 speech recognition models downloaded by `install.sh`.
 
+**The name and visual identity are excluded as well**: "Denkzettel" and
+the icons in [assets/](assets/). They are derived from the app icon of
+[DialOS](https://github.com/Stephan-Lefty/DialOS) - the same lady, the
+same circle, only a pencil writes along instead of the sound waves. The
+same reservation applies to DialOS and is carried over here: anyone may
+take the code, rebuild it and pass it on; still calling the result
+"Denkzettel", or shipping it with this face, is not covered. Otherwise
+someone else's work carries a mark that a different person stands behind.
+Details in
+[DialOS/docs/lizenzen.en.md](https://github.com/Stephan-Lefty/DialOS/blob/master/docs/lizenzen.en.md).
+
 ## Changelog
 
 ### 0.1.0 (2026-08-23)
