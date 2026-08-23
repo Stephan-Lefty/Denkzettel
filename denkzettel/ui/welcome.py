@@ -47,10 +47,16 @@ class WillkommenSeite(QtWidgets.QWizardPage):
             aufbau.addWidget(symbol)
 
         aufbau.addWidget(_absatz(
-            "Du drückst ein Tastenkürzel, sprichst deinen Gedanken, und "
-            "Denkzettel schreibt ihn auf. Dabei kannst du gleich mitsagen, "
-            "<b>wohin</b> er gehört und <b>wann</b> er dich wieder erinnern "
-            "soll – der Termin landet im Kalender."))
+            "Du drückst <b>Meta + N</b> (die Windows-Taste und N), sprichst "
+            "deinen Gedanken, und Denkzettel schreibt ihn auf. Dabei kannst "
+            "du gleich mitsagen, <b>wohin</b> er gehört und <b>wann</b> er "
+            "dich wieder erinnern soll – der Termin landet im Kalender."))
+        aufbau.addWidget(_absatz(
+            "Im Notizbuch geht auch <b>Strg + N</b>, und im Startmenü steht "
+            "Denkzettel unter <i>Dienstprogramme</i>. Sollte <b>Meta + N</b> "
+            "einmal nichts tun, hat die Arbeitsumgebung das Kürzel nicht "
+            "übernommen – dann hilft der Menüeintrag oder der Befehl "
+            "<tt>denkzettel erfassen</tt>."))
         aufbau.addWidget(_absatz(
             "Die Spracherkennung läuft <b>vollständig auf diesem Rechner</b>. "
             "Es geht kein Ton ins Netz – weder zum Erkennen noch zum "
