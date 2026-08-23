@@ -18,6 +18,8 @@ schreibt ein Stift mit.
 
 Tastenkürzel drücken. Sprechen:
 
+![Aufnahme läuft, mit Pegelanzeige und gewähltem Mikrofon](docs/screenshots/erfassen-aufnahme.png)
+
 > „Angebot für Meier nachrechnen, Tag beruflich,
 > Wiedervorlage nächsten Montag um zehn Uhr.“
 
@@ -28,6 +30,8 @@ Leertaste. Denkzettel zeigt:
 | **Notiz** | Angebot für Meier nachrechnen. |
 | **Tag** | beruflich ✓ |
 | **Wiedervorlage** | Montag, 24.08.2026, 10:00 |
+
+![Erkannter Text, Tag und Wiedervorlage zum Prüfen und Korrigieren](docs/screenshots/erfassen-pruefen.png)
 
 Prüfen, `Strg`+`S`. Der Termin steht im Kalender, die Notiz im Register
 „beruflich“.
@@ -64,6 +68,8 @@ Reihenfolge egal: „um zehn am Montag“ versteht es genauso.
 
 Ein Fenster mit **Registern** wie in einem echten Notizbuch: „Alle“,
 „Wiedervorlagen“ und je ein Register pro Tag.
+
+![Notizbuch mit Registern je Tag](docs/screenshots/notizbuch.png)
 
 **Alles geht mit der Tastatur** - Register anlegen, umbenennen, löschen
 und wechseln, Notizen anlegen, bearbeiten, abhaken, löschen. Jeder
@@ -107,12 +113,18 @@ Termin darf nicht verloren gehen, nur weil gerade kein Netz war.
 Die Adresse des eigenen Kalenders muss man nicht suchen -
 „Kalender suchen …“ in den Einstellungen holt die Liste vom Server.
 
+![Kalender-Einstellungen mit Verbindungsprüfung](docs/screenshots/einstellungen-kalender.png)
+
 ## Beim ersten Start: die Einführung
 
 Beim allerersten Start läuft ein kurzer Assistent - fünf Seiten, eine
 Minute: was das Programm tut, **wie man spricht** (mit Beispielsatz und
 dem, was daraus wird), **welches Mikrofon** genommen wird, **welche
 Tasten** es gibt, und was noch offen ist (Kalender).
+
+![Einführung: wie man spricht](docs/screenshots/einfuehrung-sprechen.png)
+
+![Einführung: Mikrofon wählen und gleich ausprobieren](docs/screenshots/einfuehrung-mikrofon.png)
 
 Er ist nicht nur Erklärung, sondern auch der Weg, das **Mikrofon zu
 wechseln** - deshalb lässt er sich jederzeit wieder aufrufen:

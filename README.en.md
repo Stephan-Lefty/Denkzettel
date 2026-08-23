@@ -20,6 +20,8 @@ lady, but instead of sound waves, a pencil writes along.
 
 Press the shortcut. Speak (in German):
 
+![Recording, with level meter and the chosen microphone](docs/screenshots/erfassen-aufnahme.png)
+
 > „Angebot für Meier nachrechnen, Tag beruflich,
 > Wiedervorlage nächsten Montag um zehn Uhr.“
 > *(Recalculate the quote for Meier, tag work, follow up next Monday at ten.)*
@@ -31,6 +33,8 @@ Press space. Denkzettel shows:
 | **Note** | Angebot für Meier nachrechnen. |
 | **Tag** | beruflich ✓ |
 | **Follow-up** | Monday, 24 Aug 2026, 10:00 |
+
+![Recognised text, tag and follow-up, ready to check and correct](docs/screenshots/erfassen-pruefen.png)
 
 Check it, press `Ctrl`+`S`. The appointment is in the calendar, the note
 is in the "beruflich" tab.
@@ -72,6 +76,8 @@ does not matter: "um zehn am Montag" works just as well.
 One window with **tabs**, like a real notebook: "Alle" (all),
 "Wiedervorlagen" (follow-ups) and one tab per tag.
 
+![Notebook with one tab per tag](docs/screenshots/notizbuch.png)
+
 **Everything works from the keyboard** - creating, renaming, deleting and
 switching tabs, as well as creating, editing, ticking off and deleting
 notes. Every command is also in the menu, so you can find it without
@@ -111,12 +117,18 @@ appointment must not get lost just because there was no connection.
 You do not have to hunt for your calendar's address - "Kalender suchen …"
 in the settings fetches the list from the server.
 
+![Calendar settings with connection check](docs/screenshots/einstellungen-kalender.png)
+
 ## First start: the introduction
 
 The very first start runs a short wizard - five pages, one minute: what
 the program does, **how to speak** (with an example and what it turns
 into), **which microphone** to use, **which keys** there are, and what is
 still open (the calendar).
+
+![Introduction: how to speak](docs/screenshots/einfuehrung-sprechen.png)
+
+![Introduction: choose a microphone and test it right away](docs/screenshots/einfuehrung-mikrofon.png)
 
 It is not only an explanation but also the way to **change the
 microphone**, so it can be brought up again at any time:
