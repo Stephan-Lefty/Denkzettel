@@ -107,12 +107,27 @@ Termin darf nicht verloren gehen, nur weil gerade kein Netz war.
 Die Adresse des eigenen Kalenders muss man nicht suchen -
 „Kalender suchen …“ in den Einstellungen holt die Liste vom Server.
 
+## Beim ersten Start: die Einführung
+
+Beim allerersten Start läuft ein kurzer Assistent - fünf Seiten, eine
+Minute: was das Programm tut, **wie man spricht** (mit Beispielsatz und
+dem, was daraus wird), **welches Mikrofon** genommen wird, **welche
+Tasten** es gibt, und was noch offen ist (Kalender).
+
+Er ist nicht nur Erklärung, sondern auch der Weg, das **Mikrofon zu
+wechseln** - deshalb lässt er sich jederzeit wieder aufrufen:
+
+* im Notizbuch über **Hilfe → Einführung**
+* im Terminal mit `denkzettel einfuehrung`
+
 ## Mikrofon
 
 Viele Rechner haben ein eingebautes Mikrofon **und** das einer Webcam.
 Welches gemeint ist, kann kein Programm raten, deshalb fragt die
-Installation danach und zeigt alle gefundenen Geräte an. Später ändern:
-Einstellungen im Programm oder
+Einführung danach und zeigt alle gefundenen Geräte an - mit einer
+**Probe**, bei der man ein paar Worte spricht und am Pegelbalken sieht,
+ob das Gerät wirklich etwas hört. Später ändern: Einführung erneut
+aufrufen, **Extras → Einstellungen** oder
 
 ```
 denkzettel mikrofone --waehlen
@@ -159,6 +174,7 @@ denkzettel pruefen
 |---|---|
 | `denkzettel` | Notizbuch öffnen |
 | `denkzettel erfassen` | sofort aufnehmen (das Tastenkürzel) |
+| `denkzettel einfuehrung` | Einführung erneut zeigen |
 | `denkzettel mikrofone --waehlen` | Mikrofon festlegen |
 | `denkzettel kalender` | Kalender auf dem Server auflisten |
 | `denkzettel nachtragen` | offene Termine nachreichen |
@@ -194,6 +210,27 @@ läuft offline, insofern ändert sich am Grundsatz nichts.
 
 Erste Fassung.
 
+* **Einführung beim ersten Start** statt einer Frage im
+  Installationsskript (Stephans Vorgabe). Fünf Seiten: was das Programm
+  tut, wie man spricht, Mikrofon-Auswahl mit Probe, Tastenbefehle,
+  Ausblick. Jederzeit wieder aufrufbar über *Hilfe → Einführung* oder
+  `denkzettel einfuehrung` - sie ist auch der Weg, das Mikrofon zu
+  wechseln. Begründung: Eine Frage, die einmal im Terminal durchläuft,
+  sieht man nie wieder, und man beantwortet sie, bevor man das Programm
+  kennt.
+* **Ein Menüeintrag, unter Dienstprogrammen.** Anfangs standen zwei
+  Einträge in zwei Kategorien: `Categories=Office;TextEditor;` bringt
+  KDE dazu, das Programm sowohl unter Büroprogramme als auch unter
+  Dienstprogramme einzusortieren, und die zweite .desktop-Datei war nur
+  als Träger des Tastenkürzels gedacht. Sie steht jetzt auf
+  `NoDisplay=true`; „Gedanken aufnehmen“ hängt als Aktion am einen
+  Eintrag.
+* **Erkennung gegen bekannten Text geprüft** (2026-08-23): vier
+  DialOS-Sprachbeispiele mit hinterlegtem Wortlaut durch whisper.cpp
+  geschickt. Inhaltlich alle vier richtig; Abweichungen nur bei
+  Zeichensetzung und Groß-/Kleinschreibung, ein einziger Wortfehler
+  („Sage“ → „Zeige“). Etwa 27 Sekunden je Diktat - das ist im
+  Wesentlichen die Ladezeit des Modells, nicht die Länge der Aufnahme.
 * Aufnahme über PulseAudio/PipeWire (`parecord`, ersatzweise `arecord`)
   mit Pegelanzeige, Höchstdauer und Warnung bei stummem Mikrofon.
 * Mikrofon-Auswahl bei der Installation und jederzeit über

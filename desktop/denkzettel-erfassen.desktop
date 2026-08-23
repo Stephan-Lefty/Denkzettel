@@ -8,10 +8,13 @@ Comment[en]=Starts recording right away - speak, check, saved
 Exec=denkzettel erfassen
 Icon=denkzettel
 Terminal=false
-Categories=Office;
-NoDisplay=false
+Categories=Utility;
 StartupNotify=true
 StartupWMClass=denkzettel
-# Globales Tastenkürzel unter KDE Plasma. GNOME bekommt seines über
-# gsettings, siehe install.sh.
+# Diese Datei ist KEIN zweiter Menüeintrag, sondern nur der Träger für das
+# globale Tastenkürzel unter Plasma - deshalb NoDisplay. Im Menü steht
+# Denkzettel einmal, und „Gedanken aufnehmen“ hängt dort als Aktion an
+# (Rechtsklick auf den Eintrag). GNOME bekommt sein Kürzel über gsettings,
+# siehe install.sh.
+NoDisplay=true
 X-KDE-Shortcuts=@TASTE@

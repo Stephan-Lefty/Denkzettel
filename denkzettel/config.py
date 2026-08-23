@@ -27,6 +27,13 @@ ICS_DIR = DATA_DIR / "kalender"
 PROTOKOLL = Path.home() / ".log" / "denkzettel.log"
 
 STANDARD: dict[str, dict[str, str]] = {
+    "start": {
+        # Beim ersten Start läuft die Einführung: was das Programm tut, wie
+        # man spricht, welches Mikrofon, welche Tasten. Danach steht hier
+        # „ja“ und sie kommt nicht mehr von selbst - über das Hilfe-Menü
+        # aber jederzeit wieder.
+        "eingefuehrt": "nein",
+    },
     "aufnahme": {
         # Leer = Standardquelle des Systems. Sonst der PulseAudio-/PipeWire-
         # Name der Quelle (siehe `denkzettel mikrofone`).

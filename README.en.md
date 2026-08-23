@@ -111,11 +111,27 @@ appointment must not get lost just because there was no connection.
 You do not have to hunt for your calendar's address - "Kalender suchen …"
 in the settings fetches the list from the server.
 
+## First start: the introduction
+
+The very first start runs a short wizard - five pages, one minute: what
+the program does, **how to speak** (with an example and what it turns
+into), **which microphone** to use, **which keys** there are, and what is
+still open (the calendar).
+
+It is not only an explanation but also the way to **change the
+microphone**, so it can be brought up again at any time:
+
+* in the notebook via **Hilfe → Einführung**
+* in a terminal with `denkzettel einfuehrung`
+
 ## Microphone
 
 Many machines have a built-in microphone **and** the one in a webcam. No
-program can guess which one you mean, so the installer asks and lists
-every device it found. To change it later, use the settings dialog or:
+program can guess which one you mean, so the introduction asks and lists
+every device it found - including a **test** where you say a few words
+and watch the level meter to see whether the device hears anything at
+all. To change it later, run the introduction again, use the settings
+dialog, or:
 
 ```
 denkzettel mikrofone --waehlen
@@ -163,6 +179,7 @@ denkzettel pruefen
 |---|---|
 | `denkzettel` | open the notebook |
 | `denkzettel erfassen` | record right away (the shortcut) |
+| `denkzettel einfuehrung` | show the introduction again |
 | `denkzettel mikrofone --waehlen` | choose the microphone |
 | `denkzettel kalender` | list calendars on the server |
 | `denkzettel nachtragen` | submit pending appointments |
@@ -198,6 +215,25 @@ Both run offline, so the principle is unchanged.
 
 First release.
 
+* **Introduction on first start** instead of a question in the install
+  script (Stephan's call). Five pages: what the program does, how to
+  speak, microphone selection with a live test, keyboard shortcuts, and
+  what to do next. Available again at any time via *Hilfe → Einführung*
+  or `denkzettel einfuehrung` - it is also the way to change the
+  microphone. Rationale: a question that scrolls past once in a terminal
+  is never seen again, and you answer it before you know the program.
+* **One menu entry, under Utilities.** Initially there were two entries
+  in two categories: `Categories=Office;TextEditor;` makes KDE file the
+  program under both Office and Utilities, and the second .desktop file
+  was only meant to carry the global shortcut. It is now
+  `NoDisplay=true`; "record a thought" hangs off the single entry as an
+  action.
+* **Recognition verified against known text** (2026-08-23): four DialOS
+  speech samples with a recorded transcript were run through
+  whisper.cpp. All four correct in substance; deviations only in
+  punctuation and capitalisation, with a single word error. About 27
+  seconds per dictation - essentially the model load time, not the
+  length of the recording.
 * Recording via PulseAudio/PipeWire (`parecord`, falling back to
   `arecord`) with a level meter, a maximum duration and a warning when
   the microphone is silent.

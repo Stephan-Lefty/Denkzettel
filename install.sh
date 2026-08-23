@@ -175,8 +175,14 @@ if [[ $MIT_WHISPER -eq 1 ]]; then
         echo "   wird übersetzt - das dauert ein paar Minuten"
         cmake -S "$ZIEL/whisper.cpp" -B "$ZIEL/whisper.cpp/build" \
               -DCMAKE_BUILD_TYPE=Release -DWHISPER_BUILD_EXAMPLES=ON
-        cmake --build "$ZIEL/whisper.cpp/build" --config Release \
-              -j "$(nproc)" --target whisper-cli
+        # Erst nur das Programm bauen, das gebraucht wird. Heißt das Ziel in
+        # dieser whisper.cpp-Fassung anders, wird alles gebaut - dauert
+        # länger, scheitert aber nicht am Namen eines Bauziels.
+        if ! cmake --build "$ZIEL/whisper.cpp/build" --config Release \
+                   -j "$(nproc)" --target whisper-cli; then
+            echo "   Bauziel whisper-cli gibt es nicht - baue alles"
+            cmake --build "$ZIEL/whisper.cpp/build" --config Release -j "$(nproc)"
+        fi
     fi
     if [[ ! -x "$ZIEL/whisper.cpp/build/bin/whisper-cli" ]]; then
         echo "   whisper-cli wurde nicht gebaut - Abbruch." >&2
@@ -251,13 +257,15 @@ PYEND
 fi
 
 # ------------------------------------------------------------- Mikrofon
+# Die Mikrofon-Auswahl steht bewusst NICHT hier, sondern in der Einführung
+# beim ersten Programmstart (Stephan, 2026-08-23). Eine Frage, die einmal
+# im Terminal durchläuft, sieht man nie wieder - und man beantwortet sie,
+# bevor man das Programm überhaupt kennt. Im Fenster kann man die Wahl
+# außerdem gleich mit dem Pegelbalken ausprobieren.
 if [[ $MIT_APP -eq 1 ]]; then
-    echo "-- Mikrofon auswählen"
-    echo "   Viele Rechner haben ein eingebautes Mikrofon UND das einer"
-    echo "   Webcam. Welches genommen wird, legst du hier fest - später"
-    echo "   jederzeit änderbar mit: denkzettel mikrofone --waehlen"
-    echo
-    PYTHONPATH="$APP" python3 -m denkzettel mikrofone --waehlen || true
+    echo "-- Mikrofone auf diesem Rechner"
+    PYTHONPATH="$APP" python3 -m denkzettel mikrofone || true
+    echo "   Ausgewählt wird beim ersten Start von Denkzettel."
     echo
 fi
 

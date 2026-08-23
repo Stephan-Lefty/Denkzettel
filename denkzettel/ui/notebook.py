@@ -221,6 +221,7 @@ class NotizbuchFenster(QtWidgets.QMainWindow):
 
         m_hilfe = leiste.addMenu("&Hilfe")
         self._aktion(m_hilfe, "&Tastenbefehle", "F1", self.tastenbefehle)
+        self._aktion(m_hilfe, "&Einführung", None, self.einfuehrung)
         self._aktion(m_hilfe, "Ü&ber Denkzettel", None, self.ueber)
 
         for nummer in range(1, 10):
@@ -492,6 +493,11 @@ class NotizbuchFenster(QtWidgets.QMainWindow):
         if EinstellungenDialog(self.cfg, self).exec() == \
                 QtWidgets.QDialog.DialogCode.Accepted:
             self.register_neu_aufbauen()
+
+    def einfuehrung(self) -> None:
+        from .welcome import WillkommenAssistent
+        WillkommenAssistent(self.cfg, self).exec()
+        self.register_neu_aufbauen()
 
     def tastenbefehle(self) -> None:
         QtWidgets.QMessageBox.information(self, "Tastenbefehle", """

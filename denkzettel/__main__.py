@@ -23,10 +23,23 @@ def _speicher() -> store.Speicher:
     return store.Speicher()
 
 
+def _einfuehrung_bei_bedarf(cfg) -> None:
+    """Beim allerersten Start erst die Einführung, dann das Programm.
+
+    Steht bewusst hier und nicht im Installationsskript: Eine Frage, die
+    einmal im Terminal durchläuft, sieht man nie wieder - und man
+    beantwortet sie, bevor man das Programm kennt.
+    """
+    from .ui import welcome
+    if welcome.noetig(cfg):
+        welcome.zeigen(cfg)
+
+
 def befehl_erfassen(cfg) -> int:
     from .ui import common
     from .ui.capture import ErfassenFenster
     app = common.anwendung(sys.argv)
+    _einfuehrung_bei_bedarf(cfg)
     speicher = _speicher()
     fenster = ErfassenFenster(cfg, speicher)
     fenster.show()
@@ -42,12 +55,28 @@ def befehl_notizbuch(cfg) -> int:
     from .ui import common
     from .ui.notebook import NotizbuchFenster
     app = common.anwendung(sys.argv)
+    _einfuehrung_bei_bedarf(cfg)
     speicher = _speicher()
     fenster = NotizbuchFenster(cfg, speicher)
     fenster.show()
     ergebnis = app.exec()
     speicher.schliessen()
     return ergebnis
+
+
+def befehl_einfuehrung(cfg) -> int:
+    """Einführung von Hand aufrufen - auch wenn sie schon gelaufen ist.
+
+    Sie ist nicht nur Erklärung, sondern auch der Weg, das Mikrofon zu
+    wechseln. Deshalb muss man sie jederzeit wieder aufrufen können:
+    hier über die Kommandozeile, im Notizbuch über Hilfe -> Einführung.
+    """
+    from .ui import common
+    from .ui.welcome import WillkommenAssistent
+    app = common.anwendung(sys.argv)
+    ergebnis = WillkommenAssistent(cfg).exec()
+    del app
+    return 0 if ergebnis else 1
 
 
 def befehl_einstellungen(cfg) -> int:
@@ -206,6 +235,8 @@ def main(argv: list[str] | None = None) -> int:
     unter.add_parser("erfassen", help="sofort aufnehmen")
     unter.add_parser("notizbuch", help="Notizbuch öffnen")
     unter.add_parser("einstellungen", help="Einstellungen öffnen")
+    unter.add_parser("einfuehrung", help="Einführung erneut zeigen "
+                                         "(auch zum Mikrofon wechseln)")
     mikro = unter.add_parser("mikrofone", help="Mikrofone anzeigen")
     mikro.add_argument("--waehlen", action="store_true",
                        help="eines davon als Standard festlegen")
@@ -223,6 +254,8 @@ def main(argv: list[str] | None = None) -> int:
         return befehl_erfassen(cfg)
     if args.befehl == "einstellungen":
         return befehl_einstellungen(cfg)
+    if args.befehl == "einfuehrung":
+        return befehl_einfuehrung(cfg)
     if args.befehl == "mikrofone":
         return befehl_mikrofone(cfg, args.waehlen)
     if args.befehl == "kalender":

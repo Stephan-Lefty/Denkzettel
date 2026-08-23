@@ -10,26 +10,28 @@ dem es fertig wurde.
 
 ### Muss vor dem ersten echten Einsatz passieren
 
-- [ ] **`install.sh` ist noch nie durchgelaufen.** Geschrieben und in
-  Teilen geprüft (Syntax, Abhängigkeitsprüfung in beiden Richtungen,
-  `--help`), aber der komplette Durchlauf mit whisper.cpp-Bau und
-  Modell-Download steht aus. Das dauert einige Minuten und lädt 574 MB.
-- [ ] **Noch kein einziges echtes Diktat.** Alle Bausteine sind einzeln
-  geprüft, die Kette Mikrofon → whisper.cpp → Auswertung → Kalender aber
-  noch nicht am Stück mit echter Stimme. Erst danach ist irgendetwas
-  belegt. (Lehre aus DialOS: Ein Test gegen eine nicht installierte
-  Änderung testet den alten Stand, ohne es zu sagen.)
+- [ ] **Noch kein Diktat über das Mikrofon.** Die Erkennung selbst ist
+  belegt (siehe unten, Prüfung gegen bekannten Text), aber der Weg
+  Webcam-Mikrofon → Aufnahme → whisper.cpp ist noch nie mit echter
+  Stimme gelaufen. Offen ist damit vor allem, ob der Pegel der
+  UGREEN-Webcam für die Erkennung taugt. (Lehre aus DialOS: Das
+  eingebaute Mikrofon des T490 war ab Werk um 60 dB übersteuert, und der
+  Erkenner lieferte deshalb nie ein Ergebnis - ohne Fehlermeldung.)
+- [ ] **Tastenkürzel `Meta`+`N` unter Plasma prüfen.** Die
+  .desktop-Datei steht jetzt auf `NoDisplay=true`. Ob kglobalaccel das
+  Kürzel auch bei einem versteckten Eintrag noch registriert, ist
+  ungeprüft - falls nicht, den Eintrag direkt in `kglobalshortcutsrc`
+  schreiben.
+- [ ] **Ladezeit des Modells.** Jedes Diktat kostet rund 27 Sekunden,
+  fast unabhängig von der Länge - das ist das Laden von
+  `large-v3-turbo`. Für einen kurzen Gedanken ist das viel. Zu prüfen:
+  kleineres Modell (`medium`, `small`) im Vergleich, oder whisper.cpp
+  als Dienst mitlaufen lassen, statt es bei jedem Diktat neu zu starten.
 - [ ] **CalDAV gegen die echte Nextcloud prüfen.** Der Code ist gegen
   RFC 5545/4791 gebaut und die erzeugte .ics-Datei stimmt (Faltung,
   Maskierung, UTC geprüft) - aber noch nie hat ein Server sie
   angenommen. Zu prüfen: App-Passwort, richtige Kalenderadresse,
   Umlaute, Erinnerung.
-- [ ] **Tastenkürzel unter KDE prüfen.** `X-KDE-Shortcuts=Meta+N` in der
-  .desktop-Datei ist der vorgesehene Weg, greift aber je nach
-  Plasma-Fassung erst nach `kbuildsycoca6` oder einer Neuanmeldung. Wenn
-  es nicht zuverlässig ist: eigenen Eintrag in `kglobalshortcutsrc`
-  schreiben.
-
 ### Danach
 
 - [ ] **Erinnerung auch ohne Kalender.** Zurzeit hängt die Wiedervorlage
@@ -69,6 +71,28 @@ dem es fertig wurde.
   ändern, wenn es im Gebrauch stört - nicht vorher wegdiskutieren.
 
 ## Erledigt
+
+### Einrichtung und erste Prüfung am Gerät (2026-08-23)
+
+- [x] **`install.sh` ist auf Stephans Manjaro durchgelaufen.** Alle
+  Abhängigkeiten waren vorhanden (also kein sudo nötig), whisper.cpp
+  1.9.3-dev gebaut, Modell geladen, Menüeinträge gesetzt.
+- [x] **Erkennung gegen bekannten Text geprüft**, mit dem Verfahren aus
+  DialOS: nicht ins Mikrofon sprechen, sondern vorhandene Aufnahmen mit
+  hinterlegtem Wortlaut durchschicken. Vier DialOS-Sprachbeispiele
+  (Anna) durch whisper.cpp - inhaltlich alle vier richtig, Abweichungen
+  nur bei Zeichensetzung und Groß-/Kleinschreibung, ein Wortfehler
+  („Sage“ → „Zeige“).
+- [x] **Doppelter Menüeintrag behoben.** Denkzettel stand zweimal und in
+  zwei Kategorien im Startmenü. Ursache: `Categories=Office;TextEditor;`
+  (KDE sortiert `TextEditor` zusätzlich unter Dienstprogramme) und eine
+  zweite .desktop-Datei, die nur das Tastenkürzel tragen sollte. Jetzt
+  ein sichtbarer Eintrag unter Dienstprogramme, die zweite Datei auf
+  `NoDisplay=true`.
+- [x] **Mikrofon-Auswahl aus dem Installationsskript in eine Einführung
+  beim ersten Start verlegt** (Stephans Vorgabe), mit Erklärung der
+  Sprechweise und der Tastenbefehle. Jederzeit wieder aufrufbar über
+  *Hilfe → Einführung* oder `denkzettel einfuehrung`.
 
 ### Grundgerüst (2026-08-23)
 
