@@ -1,0 +1,21 @@
+[Desktop Entry]
+Type=Application
+Version=1.0
+Name=Denkzettel
+GenericName=Sprachnotizbuch
+Comment=Gedanken sprechen, mit Tags einsortieren und mit Wiedervorlage im Kalender
+Comment[en]=Speak your thoughts, tag them, get a follow-up date in your calendar
+Exec=denkzettel
+Icon=denkzettel
+Terminal=false
+Categories=Office;TextEditor;
+Keywords=Notiz;Notizen;Sprache;Diktat;Wiedervorlage;Kalender;Gedanken;Tags;
+Keywords[en]=note;notes;voice;dictation;reminder;calendar;tags;
+StartupNotify=true
+StartupWMClass=denkzettel
+Actions=Erfassen;
+
+[Desktop Action Erfassen]
+Name=Gedanken aufnehmen
+Exec=denkzettel erfassen
+Icon=denkzettel

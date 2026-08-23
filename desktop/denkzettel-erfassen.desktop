@@ -1,0 +1,17 @@
+[Desktop Entry]
+Type=Application
+Version=1.0
+Name=Denkzettel: Gedanken aufnehmen
+GenericName=Sprachnotiz aufnehmen
+Comment=Nimmt sofort auf - sprechen, prüfen, gespeichert
+Comment[en]=Starts recording right away - speak, check, saved
+Exec=denkzettel erfassen
+Icon=denkzettel
+Terminal=false
+Categories=Office;
+NoDisplay=false
+StartupNotify=true
+StartupWMClass=denkzettel
+# Globales Tastenkürzel unter KDE Plasma. GNOME bekommt seines über
+# gsettings, siehe install.sh.
+X-KDE-Shortcuts=@TASTE@
