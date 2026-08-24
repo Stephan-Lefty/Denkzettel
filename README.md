@@ -116,23 +116,29 @@ der Termin noch nicht auf dem Server steht; `Strg`+`R` (oder
 Termin darf nicht verloren gehen, nur weil gerade kein Netz war.
 
 Die Adresse des eigenen Kalenders muss man nicht suchen -
-„Kalender suchen …“ in den Einstellungen holt die Liste vom Server.
+„Kalender suchen …“ holt die Liste vom Server, schon in der Einführung
+beim ersten Start und jederzeit wieder unter
+**Extras → Einstellungen → Kalender**.
 
 ![Kalender-Einstellungen mit Verbindungsprüfung](docs/screenshots/einstellungen-kalender.png)
 
 ## Beim ersten Start: die Einführung
 
-Beim allerersten Start läuft ein kurzer Assistent - fünf Seiten, eine
-Minute: was das Programm tut, **wie man spricht** (mit Beispielsatz und
-dem, was daraus wird), **welches Mikrofon** genommen wird, **welche
-Tasten** es gibt, und was noch offen ist (Kalender).
+Beim allerersten Start läuft ein kurzer Assistent - sechs Seiten, ein
+paar Minuten: was das Programm tut, **wie man spricht** (mit
+Beispielsatz und dem, was daraus wird), **welches Mikrofon** genommen
+wird, **welcher Kalender** benutzt werden soll, **welche Tasten** es
+gibt, und zum Schluss der erste Testsatz.
 
 ![Einführung: wie man spricht](docs/screenshots/einfuehrung-sprechen.png)
 
 ![Einführung: Mikrofon wählen und gleich ausprobieren](docs/screenshots/einfuehrung-mikrofon.png)
 
+![Einführung: Kalender einrichten oder als Termindatei belassen](docs/screenshots/einfuehrung-kalender.png)
+
 Er ist nicht nur Erklärung, sondern auch der Weg, das **Mikrofon zu
-wechseln** - deshalb lässt er sich jederzeit wieder aufrufen:
+wechseln oder den Kalender einzurichten** - deshalb lässt er sich
+jederzeit wieder aufrufen:
 
 * im Notizbuch über **Hilfe → Einführung**
 * im Terminal mit `denkzettel einfuehrung`
@@ -158,6 +164,17 @@ Zwei Dinge sind dabei bewusst gelöst, weil sie sonst still schiefgehen:
 * Ist das eingestellte Gerät **nicht angeschlossen** (Webcam abgezogen),
   nimmt Denkzettel über die Standardquelle auf und **sagt das**, statt
   eine leere Datei zu erzeugen.
+
+## Eigene Wörter
+
+Namen, Marken und Fachbegriffe kennt whisper.cpp naturgemäß nicht -
+„RabKarcher aufladen" wurde in einem Test zu „Rabkascha, Auflagen".
+Unter **Extras → Einstellungen → Spracherkennung** lässt sich eine Liste
+eigener Wörter eintragen; sie wird zusammen mit den bekannten Tags als
+Prompt an whisper.cpp mitgegeben und macht solche Wörter deutlich
+treffsicherer. Kostet nichts an Zeit, nur ein paar eingetragene Wörter.
+
+![Eigene Wörter in den Spracherkennungs-Einstellungen](docs/screenshots/einstellungen-wortschatz.png)
 
 ## Installation
 
@@ -247,6 +264,24 @@ jemand anderes einsteht. Näheres in
 
 Erste Fassung.
 
+* **Erstes echtes Diktat über die Webcam gelungen** (2026-08-24), nach
+  zwei Korrekturen. Die Aufnahme selbst war nie das Problem - der
+  Pegelverlauf zeigte von Anfang an ein sauberes Sprachmuster. Erstens
+  stand die Eingangslautstärke der Webcam ab Werk auf 76 % statt 100 %.
+  Zweitens wurde ein Gerätename außerhalb des Wortschatzes
+  („RabKarcher“) zu Kauderwelsch, während Datum und Uhrzeit im selben
+  Satz exakt richtig waren - ein Vokabular-Problem, kein
+  Tonqualitätsproblem. Daraus **eigene Wörter für whisper.cpp**
+  (Extras → Einstellungen → Spracherkennung): Namen, Marken und
+  Fachbegriffe, die zusammen mit den bekannten Tags als Prompt
+  mitgegeben werden. Geprüft an genau diesem Fall: „Rabkascha“ wurde zu
+  „Rabkarcher“.
+* **Kalender-Einrichtung in die Einführung verlegt** (2026-08-24), aus
+  demselben Grund wie beim Mikrofon: Eine neue Seite
+  „Wohin mit der Wiedervorlage?“ bindet dieselbe Kalender-Ansicht wie
+  die Einstellungen ein, samt „Kalender suchen …“. Mikrofon- und
+  Kalenderauswahl werden jetzt sofort gespeichert statt erst am Ende -
+  wer die Einführung danach überspringt, behält die getroffene Wahl.
 * **Einführung beim ersten Start** statt einer Frage im
   Installationsskript (Stephans Vorgabe). Fünf Seiten: was das Programm
   tut, wie man spricht, Mikrofon-Auswahl mit Probe, Tastenbefehle,

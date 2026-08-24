@@ -9,13 +9,6 @@ down rather than deleted, with the date they were completed.
 
 ### Must happen before real use
 
-- [ ] **No dictation through the microphone yet.** Recognition itself is
-  proven (see below, verified against known text), but the path webcam
-  microphone → recording → whisper.cpp has never run with an actual
-  voice. The open question is mainly whether the UGREEN webcam's level
-  is good enough. (Lesson from DialOS: the T490's built-in microphone
-  was overdriven by 60 dB out of the box, so the recogniser never
-  produced a result - without any error message.)
 - [ ] **Verify `Meta`+`N` under Plasma.** The .desktop file is now
   `NoDisplay=true`. Whether kglobalaccel still registers the shortcut
   for a hidden entry is untested - if not, write the entry into
@@ -88,6 +81,36 @@ down rather than deleted, with the date they were completed.
   introduction on first start** (Stephan's call), together with an
   explanation of how to speak and which keys exist. Available again via
   *Hilfe → Einführung* or `denkzettel einfuehrung`.
+
+### First real dictation over the webcam (2026-08-24)
+
+- [x] **First dictation over the webcam microphone went through - after
+  two fixes.** The recording itself was never the problem: the level
+  trace showed a clean speech pattern from the start, no silence, no
+  dropouts. Two other things devalued the first recognition anyway:
+  1. The webcam's input gain was at 76% instead of 100% out of the
+     box - unnecessarily quiet, now raised.
+  2. A device name outside the vocabulary ("RabKarcher") turned into
+     gibberish ("Rabkascha"). Date and time in the same sentence were
+     exactly right, though - the pattern fit a vocabulary problem, not
+     poor audio quality.
+- [x] **Custom vocabulary for whisper.cpp** (`[erkennung] wortschatz` in
+  the config, a field under Extras → Einstellungen → Spracherkennung).
+  Passed together with the known tags as `--prompt`. Verified on exactly
+  this case: without the prompt "Rabkascha, Auflagen", with it "Rabkarcher,
+  Auflagen" - noticeably closer to what was actually said ("RabKarcher
+  aufladen"). "Auflagen" instead of "aufladen" persisted - an acoustic
+  mix-up of two similar-sounding words, not a vocabulary problem, so a
+  prompt cannot fix it.
+- [x] **Calendar setup moved into the introduction**, for the same reason
+  as the microphone (Stephan's call): a new page "Wohin mit der
+  Wiedervorlage?" embeds the same calendar view as the settings,
+  including "Kalender suchen …". The introduction now has six pages
+  instead of five; the calendar explanation on the final page is gone,
+  since it is now settled beforehand.
+  Microphone and calendar choices are saved immediately rather than only
+  at the end - leaving the introduction via "Skip" after these pages
+  still keeps the choice made.
 
 ### Foundation (2026-08-23)
 

@@ -135,6 +135,8 @@ still open (the calendar).
 
 ![Introduction: choose a microphone and test it right away](docs/screenshots/einfuehrung-mikrofon.png)
 
+![Introduction: set up a calendar or keep using calendar files](docs/screenshots/einfuehrung-kalender.png)
+
 It is not only an explanation but also the way to **change the
 microphone**, so it can be brought up again at any time:
 
@@ -163,6 +165,17 @@ otherwise:
 * If the configured device is **not connected** (webcam unplugged),
   Denkzettel records via the system default and **says so**, instead of
   producing an empty file.
+
+## Custom vocabulary
+
+whisper.cpp naturally does not know names, brands or technical terms -
+"RabKarcher aufladen" (a device name) came out as "Rabkascha, Auflagen"
+in one test. Under **Extras → Einstellungen → Spracherkennung** you can
+enter a list of custom words; it is passed to whisper.cpp together with
+the known tags as a prompt and makes such words noticeably more
+accurate. Costs no time, just a few entered words.
+
+![Custom vocabulary in the speech recognition settings](docs/screenshots/einstellungen-wortschatz.png)
 
 ## Installation
 
@@ -251,6 +264,23 @@ Details in
 
 First release.
 
+* **First real dictation over the webcam succeeded** (2026-08-24), after
+  two fixes. The recording itself was never the problem - the level
+  trace showed a clean speech pattern from the start. First, the
+  webcam's input gain was at 76% instead of 100% out of the box. Second,
+  a device name outside the vocabulary ("RabKarcher") turned into
+  gibberish, while date and time in the same sentence were exactly
+  right - a vocabulary problem, not an audio-quality one. This led to
+  **custom vocabulary for whisper.cpp** (Extras → Einstellungen →
+  Spracherkennung): names, brands and technical terms passed together
+  with the known tags as a prompt. Verified on exactly this case:
+  "Rabkascha" became "Rabkarcher".
+* **Calendar setup moved into the introduction** (2026-08-24), for the
+  same reason as the microphone: a new page "Wohin mit der
+  Wiedervorlage?" embeds the same calendar view as the settings,
+  including "Kalender suchen …". Microphone and calendar choices are now
+  saved immediately rather than only at the end - skipping the
+  introduction afterwards still keeps the choice made.
 * **Introduction on first start** instead of a question in the install
   script (Stephan's call). Five pages: what the program does, how to
   speak, microphone selection with a live test, keyboard shortcuts, and

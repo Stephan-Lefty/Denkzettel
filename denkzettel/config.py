@@ -46,6 +46,10 @@ STANDARD: dict[str, dict[str, str]] = {
         "modell": "",            # leer = neuestes ggml-Modell in MODELL_DIR
         "sprache": "de",
         "threads": "0",          # 0 = halbe Kernanzahl
+        # Eigene Wörter, die whisper.cpp sonst nicht kennt - Marken, Namen,
+        # Fachbegriffe. Werden zusammen mit den bekannten Tags als Prompt
+        # mitgegeben, damit der Erkenner sie eher trifft.
+        "wortschatz": "",
     },
     "notizen": {
         "bekannte_tags": "privat, beruflich, DialOS, Idee, Einkauf",
@@ -106,6 +110,11 @@ def zahl(cfg, abschnitt: str, schluessel: str, standard: int) -> int:
         return int(wert(cfg, abschnitt, schluessel, str(standard)))
     except ValueError:
         return standard
+
+
+def eigene_woerter(cfg) -> list[str]:
+    roh = wert(cfg, "erkennung", "wortschatz")
+    return [w.strip() for w in roh.split(",") if w.strip()]
 
 
 def bekannte_tags(cfg) -> list[str]:

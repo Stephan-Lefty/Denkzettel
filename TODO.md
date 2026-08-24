@@ -10,13 +10,6 @@ dem es fertig wurde.
 
 ### Muss vor dem ersten echten Einsatz passieren
 
-- [ ] **Noch kein Diktat über das Mikrofon.** Die Erkennung selbst ist
-  belegt (siehe unten, Prüfung gegen bekannten Text), aber der Weg
-  Webcam-Mikrofon → Aufnahme → whisper.cpp ist noch nie mit echter
-  Stimme gelaufen. Offen ist damit vor allem, ob der Pegel der
-  UGREEN-Webcam für die Erkennung taugt. (Lehre aus DialOS: Das
-  eingebaute Mikrofon des T490 war ab Werk um 60 dB übersteuert, und der
-  Erkenner lieferte deshalb nie ein Ergebnis - ohne Fehlermeldung.)
 - [ ] **Tastenkürzel `Meta`+`N` unter Plasma prüfen.** Die
   .desktop-Datei steht jetzt auf `NoDisplay=true`. Ob kglobalaccel das
   Kürzel auch bei einem versteckten Eintrag noch registriert, ist
@@ -93,6 +86,38 @@ dem es fertig wurde.
   beim ersten Start verlegt** (Stephans Vorgabe), mit Erklärung der
   Sprechweise und der Tastenbefehle. Jederzeit wieder aufrufbar über
   *Hilfe → Einführung* oder `denkzettel einfuehrung`.
+
+### Erstes echtes Diktat über die Webcam (2026-08-24)
+
+- [x] **Erstes Diktat über das Webcam-Mikrofon lief durch - nach zwei
+  Korrekturen.** Die Aufnahme selbst war nie das Problem: Der
+  Pegelverlauf zeigte von Anfang an ein sauberes Sprachmuster, keine
+  Stille, keine Aussetzer. Zwei andere Dinge haben die erste Erkennung
+  trotzdem entwertet:
+  1. Die Eingangslautstärke der Webcam stand ab Werk auf 76 % statt
+     100 % - unnötig leise, jetzt hochgesetzt.
+  2. Ein Gerätename außerhalb des Wortschatzes („RabKarcher“) wurde zu
+     Kauderwelsch („Rabkascha“). Datum und Uhrzeit im selben Satz waren
+     dagegen exakt richtig - das Muster passte zu einem
+     Vokabular-Problem, nicht zu schlechter Tonqualität.
+- [x] **Eigene Wörter für whisper.cpp** (`[erkennung] wortschatz` in der
+  Konfiguration, Feld in Extras → Einstellungen → Spracherkennung).
+  Werden zusammen mit den bekannten Tags als `--prompt` mitgegeben.
+  Geprüft an genau diesem Fall: ohne Prompt „Rabkascha, Auflagen“, mit
+  Prompt „Rabkarcher, Auflagen“ - deutlich näher am tatsächlich
+  gesagten „RabKarcher aufladen“. „Auflagen“ statt „aufladen“ blieb
+  bestehen - eine akustische Verwechslung zweier ähnlich klingender
+  Wörter, kein Vokabular-Problem, also durch einen Prompt nicht zu
+  beheben.
+- [x] **Kalender-Einrichtung in die Einführung verlegt**, aus demselben
+  Grund wie beim Mikrofon (Stephans Vorgabe): Eine neue Seite
+  „Wohin mit der Wiedervorlage?“ bindet dieselbe Kalender-Ansicht wie
+  die Einstellungen ein, samt „Kalender suchen …“. Die Einführung hat
+  jetzt sechs statt fünf Seiten; die Kalender-Erklärung im Schluss-Text
+  ist entfallen, weil sie jetzt vorher schon geklärt ist.
+  Mikrofon- und Kalenderauswahl werden dabei sofort gespeichert, nicht
+  erst am Ende - wer die Einführung nach diesen Seiten über
+  „Überspringen“ verlässt, behält die getroffene Wahl trotzdem.
 
 ### Grundgerüst (2026-08-23)
 

@@ -170,6 +170,18 @@ class ErkennungSeite(QtWidgets.QWidget):
         self.modell.setPlaceholderText("leer = größtes Modell im Modellordner")
         aufbau.addRow("&Modelldatei:", self.modell)
 
+        self.wortschatz = QtWidgets.QLineEdit(config.wert(cfg, "erkennung", "wortschatz"))
+        self.wortschatz.setPlaceholderText(
+            "Namen, Marken, Fachbegriffe - mit Komma getrennt")
+        aufbau.addRow("&Eigene Wörter:", self.wortschatz)
+        hinweis = QtWidgets.QLabel(
+            "Werden zusammen mit den bekannten Tags als Prompt an "
+            "whisper.cpp gegeben - macht Wörter treffsicherer, die das "
+            "Modell sonst nicht kennt (z. B. Produktnamen).")
+        hinweis.setWordWrap(True)
+        hinweis.setStyleSheet("color: #666;")
+        aufbau.addRow("", hinweis)
+
         self.threads = QtWidgets.QSpinBox()
         self.threads.setRange(0, 64)
         self.threads.setSpecialValueText("automatisch")
@@ -191,6 +203,7 @@ class ErkennungSeite(QtWidgets.QWidget):
     def uebernehmen(self) -> None:
         self.cfg.set("erkennung", "programm", self.programm.text().strip())
         self.cfg.set("erkennung", "modell", self.modell.text().strip())
+        self.cfg.set("erkennung", "wortschatz", self.wortschatz.text().strip())
         self.cfg.set("erkennung", "threads", str(self.threads.value()))
         self.cfg.set("aufnahme", "hoechstdauer_sekunden", str(self.dauer.value()))
         self.cfg.set("aufnahme", "aufnahmen_behalten",

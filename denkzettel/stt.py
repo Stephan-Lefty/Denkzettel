@@ -130,6 +130,22 @@ def _threads(cfg) -> int:
     return max(1, (os.cpu_count() or 2) // 2)
 
 
+def _prompt(cfg) -> str:
+    """whisper.cpp auf erwartete Wörter einstimmen.
+
+    Ein Prompt macht Wörter außerhalb des Trainingswortschatzes treffbar -
+    Marken, Produktnamen, Eigennamen. Geprüft an einem echten Fall: „Rab-
+    Karcher" (ein Gerätename) wurde ohne Prompt als „Rabkascha" erkannt,
+    mit Prompt als „Rabkarcher" - deutlich näher dran. Die bekannten Tags
+    laufen immer mit, weil sie ohnehin in der Konfiguration stehen und in
+    jedem Diktat vorkommen können ("Tag beruflich").
+    """
+    woerter = config.bekannte_tags(cfg) + config.eigene_woerter(cfg)
+    if not woerter:
+        return ""
+    return "Häufige Wörter: " + ", ".join(woerter) + "."
+
+
 def saeubern(text: str) -> str:
     """Ausgabe zu einem Fließtext machen."""
     text = LEERMARKEN.sub(" ", text)
@@ -159,6 +175,9 @@ def transkribieren(wav: Path, cfg, zeitlimit: int = 600) -> str:
             "-otxt",
             "-of", str(ziel),
         ]
+        prompt = _prompt(cfg)
+        if prompt:
+            befehl += ["--prompt", prompt]
         try:
             lauf = subprocess.run(befehl, capture_output=True, text=True,
                                   timeout=zeitlimit)

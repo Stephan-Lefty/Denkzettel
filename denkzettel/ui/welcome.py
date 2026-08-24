@@ -2,14 +2,17 @@
 """
 Denkzettel: die Einführung beim ersten Start.
 
-Vier Seiten: was das Programm tut, wie man spricht, welches Mikrofon,
-welche Tasten. Danach kommt sie nicht mehr von selbst - über
-„Hilfe → Einführung“ aber jederzeit wieder.
+Sechs Seiten: was das Programm tut, wie man spricht, welches Mikrofon,
+welcher Kalender, welche Tasten, und zum Schluss der Ausblick. Danach
+kommt sie nicht mehr von selbst - über „Hilfe → Einführung“ aber
+jederzeit wieder.
 
-Die Mikrofon-Auswahl steht bewusst **hier** und nicht im
+Mikrofon- und Kalenderauswahl stehen bewusst **hier** und nicht im
 Installationsskript: Eine Frage, die einmal im Terminal durchläuft, sieht
 man nie wieder, und man beantwortet sie, bevor man das Programm kennt.
-Hier kann man sie mit dem Pegelbalken gleich ausprobieren.
+Beide Seiten sind dieselben Bausteine wie in den Einstellungen - hier
+nur mit erklärendem Text drumherum, und beim Mikrofon zusätzlich mit der
+Pegelprobe.
 """
 from __future__ import annotations
 
@@ -17,7 +20,7 @@ from PyQt6 import QtCore, QtGui, QtWidgets
 
 from .. import config
 from . import common
-from .settings import MikrofonSeite
+from .settings import KalenderSeite, MikrofonSeite
 
 STIL_BEISPIEL = """
     background: palette(base); border: 1px solid palette(mid);
@@ -134,6 +137,39 @@ class MikrofonWizardSeite(QtWidgets.QWizardPage):
     def validatePage(self) -> bool:            # noqa: N802 - Qt-Vorgabe
         self.seite.knopf_probe.setChecked(False)
         self.cfg.set("aufnahme", "geraet", self.seite.gewaehltes_geraet())
+        # Sofort auf die Platte, nicht erst am Ende: Wer die Einführung nach
+        # dieser Seite abbricht (Überspringen), soll die Auswahl trotzdem
+        # behalten - sie ist ja schon getroffen.
+        config.speichern(self.cfg)
+        return True
+
+
+class KalenderWizardSeite(QtWidgets.QWizardPage):
+    def __init__(self, cfg):
+        super().__init__()
+        self.cfg = cfg
+        self.setTitle("Wohin mit der Wiedervorlage?")
+        self.setSubTitle("Automatisch gefunden wird ein Nextcloud-Kalender - "
+                         "der Rest geht auch ohne.")
+
+        aufbau = QtWidgets.QVBoxLayout(self)
+        aufbau.addWidget(_absatz(
+            "Trägst du hier deine Nextcloud ein, landet jede Wiedervorlage "
+            "direkt in deinem Kalender und ist damit auch auf dem Handy da. "
+            "„Kalender suchen …“ findet die richtige Adresse von selbst - du "
+            "brauchst nur die Sammel-Adresse und ein <b>App-Passwort</b> "
+            "(nicht dein Anmelde-Passwort)."))
+        self.seite = KalenderSeite(cfg)
+        aufbau.addWidget(self.seite, 1)
+        aufbau.addWidget(_absatz(
+            "Ohne Angabe legt Denkzettel jede Wiedervorlage stattdessen als "
+            "Termindatei ab, die du in Thunderbird einbinden kannst. Auch "
+            "das lässt sich später jederzeit ändern, hier oder unter "
+            "<b>Extras → Einstellungen</b>."))
+
+    def validatePage(self) -> bool:            # noqa: N802 - Qt-Vorgabe
+        self.seite.uebernehmen()
+        config.speichern(self.cfg)
         return True
 
 
@@ -195,17 +231,9 @@ class SchlussSeite(QtWidgets.QWizardPage):
         super().__init__()
         self.cfg = cfg
         self.setTitle("Fertig")
-        self.setSubTitle("Zwei Dinge noch, dann kann es losgehen.")
+        self.setSubTitle("Eine Sache noch, dann kann es losgehen.")
 
         aufbau = QtWidgets.QVBoxLayout(self)
-        aufbau.addWidget(_absatz(
-            "<b>Kalender.</b> Ohne weitere Einstellung legt Denkzettel jede "
-            "Wiedervorlage als Termindatei ab, die man in Thunderbird als "
-            "lokalen Kalender einbinden kann. Wenn du sie stattdessen "
-            "direkt in deine Nextcloud schreiben lassen willst – und damit "
-            "auch aufs Handy bekommst –, richte das unter "
-            "<b>Extras → Einstellungen → Kalender</b> ein. Dort findet "
-            "„Kalender suchen …“ die richtige Adresse von selbst."))
         aufbau.addWidget(_absatz(
             "<b>Das erste Diktat.</b> Drück <b>Strg + N</b> und sag "
             "einfach:"))
@@ -240,6 +268,7 @@ class WillkommenAssistent(QtWidgets.QWizard):
         self.addPage(WillkommenSeite())
         self.addPage(SprechenSeite())
         self.addPage(MikrofonWizardSeite(cfg))
+        self.addPage(KalenderWizardSeite(cfg))
         self.addPage(TastenSeite())
         self.addPage(SchlussSeite(cfg))
 
