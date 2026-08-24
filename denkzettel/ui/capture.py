@@ -319,9 +319,14 @@ class ErfassenFenster(QtWidgets.QDialog):
         self._arbeit.start()
 
     def _kalender_fertig(self, notiz: store.Notiz, ergebnis) -> None:
+        # Läuft im Hauptthread (Qt-Signal), deshalb hier und nicht im
+        # Hintergrund-Thread: die Sammel-Datei braucht die Datenbank, und
+        # sqlite3-Verbindungen dürfen nicht threadübergreifend benutzt werden.
         status, meldung = ergebnis
         self.speicher.kalender_setzen(notiz.id, status, notiz.kalender_ziel,
                                       notiz.kalender_uid)
+        if status == store.ICS:
+            calendar_sync.sammelkalender_schreiben(self.cfg, self.speicher)
         if status == store.CALDAV:
             self.status.setText("Gespeichert und im Kalender eingetragen.")
             QtCore.QTimer.singleShot(900, self.accept)

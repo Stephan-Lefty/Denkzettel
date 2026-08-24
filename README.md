@@ -105,15 +105,16 @@ Zwei Wege, umschaltbar in den Einstellungen:
 * **CalDAV** - der Termin geht direkt in den Nextcloud-Kalender und ist
   damit auch auf dem Handy da. Bei Nextcloud ein **App-Passwort**
   benutzen, nicht das Anmelde-Passwort.
-* **Termindatei (.ics)** - der Termin wird als Datei abgelegt, die man in
-  Thunderbird als lokalen Kalender einbindet. Ohne Server, ohne
-  Zugangsdaten.
+* **Sammel-Termindatei (.ics)** - alle offenen Wiedervorlagen stehen
+  gesammelt in einer Datei (`denkzettel.ics`), die man **einmal** in
+  Thunderbird als Kalender einbindet. Ohne Server, ohne Zugangsdaten.
 
 Ab Werk steht es auf **automatisch**: erst der Server, und wenn der nicht
-erreichbar ist, ersatzweise die Datei. Die Notiz merkt sich dann, dass
-der Termin noch nicht auf dem Server steht; `Strg`+`R` (oder
-`denkzettel nachtragen`) reicht ihn nach, sobald wieder Netz da ist. Ein
-Termin darf nicht verloren gehen, nur weil gerade kein Netz war.
+erreichbar ist, ersatzweise die Sammel-Datei. Die Notiz merkt sich dann,
+dass der Termin noch nicht auf dem Server steht; `Strg`+`R` (oder
+`denkzettel nachtragen`) reicht ihn nach, sobald wieder Netz da ist - und
+verschwindet dabei automatisch aus der Sammel-Datei. Ein Termin darf
+nicht verloren gehen, nur weil gerade kein Netz war.
 
 Die Adresse des eigenen Kalenders muss man nicht suchen -
 „Kalender suchen …“ holt die Liste vom Server, schon in der Einführung
@@ -121,6 +122,24 @@ beim ersten Start und jederzeit wieder unter
 **Extras → Einstellungen → Kalender**.
 
 ![Kalender-Einstellungen mit Verbindungsprüfung](docs/screenshots/einstellungen-kalender.png)
+
+### Die Sammel-Termindatei in Thunderbird einbinden
+
+Einmalig, danach aktualisiert sich alles von selbst:
+
+1. Thunderbird: **Datei → Neu → Kalender…**
+2. **Im Netzwerk** wählen, als Format **iCalendar (ICS)**
+3. Als Adresse den vollen Pfad mit `file://` davor eintragen, zum
+   Beispiel `file:///home/NUTZERNAME/.local/share/denkzettel/kalender/denkzettel.ics`
+   (der genaue Pfad steht unter *Extras → Einstellungen → Kalender* im
+   Feld „Ordner für Termindateien“, `denkzettel.ics` dahängen)
+4. Name und Farbe frei wählen, „Erinnerungen anzeigen“ anlassen
+5. Bei „Aktualisieren alle“ eine Minutenzahl eintragen (z. B. 15) -
+   Thunderbird fragt die Datei sonst nur beim Programmstart ab
+
+Thunderbird liest die Datei danach von selbst neu ein; ein Klick auf
+„Kalender synchronisieren“ (Symbol oben rechts im Kalender) holt sofort
+den aktuellen Stand, ohne auf das nächste automatische Update zu warten.
 
 ## Beim ersten Start: die Einführung
 
@@ -222,7 +241,7 @@ denkzettel pruefen
 | Einstellungen | `~/.config/denkzettel/config.ini` |
 | Notizen (SQLite) | `~/.local/share/denkzettel/notizen.db` |
 | Tonaufnahmen | `~/.local/share/denkzettel/aufnahmen/` |
-| Termindateien | `~/.local/share/denkzettel/kalender/` |
+| Sammel-Termindatei | `~/.local/share/denkzettel/kalender/denkzettel.ics` |
 | Spracherkennung | `~/.local/share/denkzettel/whisper.cpp/`, `…/modelle/` |
 
 Die Notizen liegen in **einer** Datei - kopieren genügt als Sicherung.
@@ -264,6 +283,17 @@ jemand anderes einsteht. Näheres in
 
 Erste Fassung.
 
+* **Eine Sammel-Termindatei statt einer Datei pro Notiz** (2026-08-24,
+  Stephans Wunsch nach direktem Thunderbird-Zugriff ohne Nextcloud).
+  Thunderbird bindet immer nur eine feste Datei ein, keinen ganzen
+  Ordner - eine Datei je Notiz hätte bedeutet, jede einzeln von Hand zu
+  importieren. Jetzt steht alles Offene in `denkzettel.ics`, komplett
+  aus der Datenbank neu geschrieben bei jeder Änderung (angelegt,
+  bearbeitet, gelöscht, erledigt, nachgetragen) - kein Suchen und
+  Ersetzen in einer bestehenden Datei, das ist einfacher und garantiert
+  richtig. Ein Termin, der auf den CalDAV-Server nachgetragen wird,
+  verschwindet dabei automatisch aus der Datei. Geprüft: Anlegen,
+  Löschen und Übergang zu CalDAV verändern die Datei genau wie erwartet.
 * **Startmenü zeigt jetzt die gefüllte Kreisscheibe statt der
   durchsichtigen Strichzeichnung** (2026-08-24, Stephans Wunsch). Die
   Farbwahl ist dieselbe wie in den READMEs: dunkle Scheibe auf hellem

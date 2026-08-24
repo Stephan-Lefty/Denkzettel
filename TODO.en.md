@@ -9,10 +9,14 @@ down rather than deleted, with the date they were completed.
 
 ### Must happen before real use
 
-- [ ] **Verify `Meta`+`N` under Plasma.** The .desktop file is now
-  `NoDisplay=true`. Whether kglobalaccel still registers the shortcut
-  for a hidden entry is untested - if not, write the entry into
-  `kglobalshortcutsrc` directly.
+- [ ] **Combined calendar file never opened in real Thunderbird.** The
+  file follows RFC 5545 (folding, several VEVENTs in one VCALENDAR,
+  create/delete/CalDAV-transition tested against the real database) -
+  but Thunderbird has never actually displayed it as a subscribed
+  calendar. Open: whether the exact steps in the README (File → New →
+  Calendar → On the Network → iCalendar (ICS) → `file://` path) match
+  Stephan's Thunderbird version, whether the reminder (VALARM) arrives,
+  whether the automatic refresh interval is reliable.
 - [ ] **Model load time.** Every dictation costs about 27 seconds,
   almost regardless of length - that is loading `large-v3-turbo`. For a
   short thought that is a lot. To try: compare smaller models
@@ -111,6 +115,30 @@ down rather than deleted, with the date they were completed.
   Microphone and calendar choices are saved immediately rather than only
   at the end - leaving the introduction via "Skip" after these pages
   still keeps the choice made.
+- [x] **`Meta`+`N` works under Plasma 6.7.4 - confirmed by an actual key
+  press.** An earlier test (empty `kglobalshortcutsrc`) had wrongly
+  concluded "not registered"; in fact `kglobalaccel` only writes
+  deviations from the shortcut suggested in the `.desktop` file into
+  that config - if the assignment matches the suggestion, the file stays
+  empty even though the shortcut is active. Only a real key press was
+  conclusive, not a simulated one under Wayland (`xdotool`), which is
+  unreliable there anyway.
+
+### Combined calendar file for Thunderbird (2026-08-24)
+
+- [x] **Replaced one file per note with a single combined file**
+  (Stephan's request: direct Thunderbird access, Nextcloud deferred).
+  Thunderbird always subscribes to one fixed file, never a folder -
+  `denkzettel.ics` is now rewritten entirely from the database on every
+  change (create, edit, delete, resubmit). Verified against a real
+  database: creating raises the VEVENT count correctly, deleting lowers
+  it correctly, moving to CalDAV empties the file correctly.
+- [x] **Avoided a threading trap.** `eintragen()` runs on a background
+  thread while recording (network I/O should not freeze the UI). The
+  combined file needs the database, though, and `sqlite3` connections
+  must not be used across threads. So `eintragen()` no longer writes any
+  file itself; only the caller on the main thread does
+  (`_kalender_fertig`, via a Qt signal callback).
 
 ### Foundation (2026-08-23)
 

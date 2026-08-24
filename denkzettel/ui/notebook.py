@@ -418,6 +418,10 @@ class NotizbuchFenster(QtWidgets.QMainWindow):
                                           notiz.kalender_uid)
             if status not in (store.CALDAV, store.OHNE):
                 self.statusBar().showMessage(meldung.replace("\n", " "), 8000)
+        # Immer neu schreiben, nicht nur bei einer neuen Wiedervorlage:
+        # eine entfernte oder verschobene Wiedervorlage muss aus der
+        # Sammel-Datei genauso verschwinden bzw. sich verschieben.
+        calendar_sync.sammelkalender_schreiben(self.cfg, self.speicher)
         self.register_neu_aufbauen()
 
     def notiz_schreiben(self) -> None:
@@ -440,6 +444,7 @@ class NotizbuchFenster(QtWidgets.QMainWindow):
             status, meldung = calendar_sync.eintragen(self.cfg, notiz)
             self.speicher.kalender_setzen(notiz.id, status, notiz.kalender_ziel,
                                           notiz.kalender_uid)
+            calendar_sync.sammelkalender_schreiben(self.cfg, self.speicher)
         self.register_neu_aufbauen()
 
     def notiz_diktieren(self) -> None:
@@ -473,6 +478,9 @@ class NotizbuchFenster(QtWidgets.QMainWindow):
             return
         for kennung in kennungen:
             self.speicher.loeschen(kennung)
+        # Eine gelöschte Notiz mit offener Wiedervorlage darf nicht als
+        # Geistertermin in der Sammel-Datei stehen bleiben.
+        calendar_sync.sammelkalender_schreiben(self.cfg, self.speicher)
         self.register_neu_aufbauen()
 
     # -- Extras -------------------------------------------------------

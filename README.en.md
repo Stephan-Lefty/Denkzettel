@@ -111,18 +111,39 @@ Two routes, switchable in the settings:
 * **CalDAV** - the appointment goes straight into your Nextcloud calendar
   and is therefore on your phone as well. With Nextcloud, use an **app
   password**, not your login password.
-* **iCalendar file (.ics)** - written to a folder you can add to
-  Thunderbird as a local calendar. No server, no credentials.
+* **Combined iCalendar file (.ics)** - every open follow-up is collected
+  in one file (`denkzettel.ics`) that you add to Thunderbird **once** as
+  a calendar. No server, no credentials.
 
-The default is **automatic**: server first, file as a fallback. The note
-then remembers that the appointment is not on the server yet; `Ctrl`+`R`
-(or `denkzettel nachtragen`) submits it once the network is back. An
-appointment must not get lost just because there was no connection.
+The default is **automatic**: server first, the combined file as a
+fallback. The note then remembers that the appointment is not on the
+server yet; `Ctrl`+`R` (or `denkzettel nachtragen`) submits it once the
+network is back - and it disappears from the combined file
+automatically. An appointment must not get lost just because there was
+no connection.
 
 You do not have to hunt for your calendar's address - "Kalender suchen …"
 in the settings fetches the list from the server.
 
 ![Calendar settings with connection check](docs/screenshots/einstellungen-kalender.png)
+
+### Adding the combined file to Thunderbird
+
+One-time setup, everything updates itself afterwards:
+
+1. Thunderbird: **File → New → Calendar…**
+2. Choose **On the Network**, format **iCalendar (ICS)**
+3. Enter the full path with `file://` in front, for example
+   `file:///home/USERNAME/.local/share/denkzettel/kalender/denkzettel.ics`
+   (the exact path is shown under *Extras → Einstellungen → Kalender*,
+   field "Ordner für Termindateien" - append `denkzettel.ics`)
+4. Pick a name and colour, leave "Show reminders" on
+5. Set a refresh interval (e.g. 15 minutes) under "Refresh in" -
+   otherwise Thunderbird only re-reads the file on startup
+
+Thunderbird then re-reads the file by itself; clicking "Synchronize"
+(the icon in the top right of the calendar view) fetches the current
+state immediately, without waiting for the next automatic refresh.
 
 ## First start: the introduction
 
@@ -223,7 +244,7 @@ denkzettel pruefen
 | Settings | `~/.config/denkzettel/config.ini` |
 | Notes (SQLite) | `~/.local/share/denkzettel/notizen.db` |
 | Recordings | `~/.local/share/denkzettel/aufnahmen/` |
-| Calendar files | `~/.local/share/denkzettel/kalender/` |
+| Combined calendar file | `~/.local/share/denkzettel/kalender/denkzettel.ics` |
 | Speech recognition | `~/.local/share/denkzettel/whisper.cpp/`, `…/modelle/` |
 
 The notes live in **one** file - copying it is a complete backup.
@@ -264,6 +285,17 @@ Details in
 
 First release.
 
+* **One combined calendar file instead of one file per note**
+  (2026-08-24, Stephan's request for direct Thunderbird access without
+  Nextcloud). Thunderbird always subscribes to one fixed file, never a
+  whole folder - one file per note would have meant importing each one
+  by hand. Everything open now lives in `denkzettel.ics`, rewritten
+  entirely from the database on every change (created, edited, deleted,
+  marked done, resubmitted) - no searching and replacing inside an
+  existing file, which is simpler and guaranteed correct. An appointment
+  resubmitted to the CalDAV server disappears from the file
+  automatically. Verified: creating, deleting and moving to CalDAV all
+  change the file exactly as expected.
 * **The application menu now shows the filled circle instead of the
   transparent line drawing** (2026-08-24, Stephan's request). Same
   colour choice as in the READMEs: the dark circle on a light panel.

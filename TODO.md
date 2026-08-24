@@ -10,11 +10,14 @@ dem es fertig wurde.
 
 ### Muss vor dem ersten echten Einsatz passieren
 
-- [ ] **Tastenkürzel `Meta`+`N` unter Plasma prüfen.** Die
-  .desktop-Datei steht jetzt auf `NoDisplay=true`. Ob kglobalaccel das
-  Kürzel auch bei einem versteckten Eintrag noch registriert, ist
-  ungeprüft - falls nicht, den Eintrag direkt in `kglobalshortcutsrc`
-  schreiben.
+- [ ] **Sammel-Termindatei noch nie in echtem Thunderbird geöffnet.**
+  Die Datei ist gegen RFC 5545 geprüft (Faltung, mehrere VEVENT in einem
+  VCALENDAR, Anlegen/Löschen/CalDAV-Übergang gegen die echte Datenbank
+  getestet) - aber noch nie hat Thunderbird sie tatsächlich eingebunden
+  angezeigt. Offen: ob der genaue Weg im README (Datei → Neu → Kalender
+  → Im Netzwerk → iCalendar (ICS) → `file://`-Pfad) auf Stephans
+  Thunderbird-Version so stimmt, ob die Erinnerung (VALARM) ankommt, ob
+  der automatische Aktualisierungs-Takt zuverlässig greift.
 - [ ] **Ladezeit des Modells.** Jedes Diktat kostet rund 27 Sekunden,
   fast unabhängig von der Länge - das ist das Laden von
   `large-v3-turbo`. Für einen kurzen Gedanken ist das viel. Zu prüfen:
@@ -118,6 +121,32 @@ dem es fertig wurde.
   Mikrofon- und Kalenderauswahl werden dabei sofort gespeichert, nicht
   erst am Ende - wer die Einführung nach diesen Seiten über
   „Überspringen“ verlässt, behält die getroffene Wahl trotzdem.
+- [x] **`Meta`+`N` funktioniert unter Plasma 6.7.4 - bestätigt durch
+  echten Tastendruck.** Ein erster Test (leere `kglobalshortcutsrc`)
+  hatte fälschlich auf „nicht registriert“ schließen lassen; tatsächlich
+  schreibt `kglobalaccel` nur Abweichungen vom in der `.desktop`-Datei
+  vorgeschlagenen Kurzbefehl in diese Datei - stimmt die Zuweisung mit
+  dem Vorschlag überein, bleibt die Datei leer, obwohl der Kurzbefehl
+  aktiv ist. Erst der reale Tastendruck war beweiskräftig, kein unter
+  Wayland ohnehin unzuverlässiger simulierter (`xdotool`).
+
+### Sammel-Termindatei für Thunderbird (2026-08-24)
+
+- [x] **Eine Datei pro Notiz durch eine gemeinsame Sammel-Datei
+  ersetzt** (Stephans Wunsch: direkter Thunderbird-Zugriff, Nextcloud
+  vertagt). Thunderbird bindet immer nur eine feste Datei ein, nie einen
+  Ordner - `denkzettel.ics` wird jetzt bei jeder Änderung (anlegen,
+  bearbeiten, löschen, nachtragen) komplett aus der Datenbank neu
+  geschrieben. Geprüft gegen eine echte Datenbank: Anlegen erhöht die
+  VEVENT-Anzahl richtig, Löschen verringert sie richtig, der Übergang zu
+  CalDAV leert die Datei richtig.
+- [x] **Threading-Falle vermieden.** `eintragen()` läuft bei der
+  Aufnahme im Hintergrund-Thread (Netzwerk-I/O soll die Oberfläche nicht
+  einfrieren). Die Sammel-Datei braucht aber die Datenbank, und
+  `sqlite3`-Verbindungen dürfen nicht threadübergreifend benutzt werden.
+  Deshalb schreibt `eintragen()` selbst keine Datei mehr, sondern nur
+  noch der Aufrufer im Hauptthread (`_kalender_fertig`, per
+  Qt-Signal-Rückruf).
 
 ### Grundgerüst (2026-08-23)
 

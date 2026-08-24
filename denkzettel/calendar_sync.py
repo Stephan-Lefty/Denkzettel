@@ -6,8 +6,13 @@ Zwei Wege, umschaltbar über `[kalender] modus`:
 
 * **caldav** - der Termin wird direkt in den Nextcloud-Kalender
   geschrieben und ist dadurch auch auf dem Handy da.
-* **ics**    - der Termin wird als Datei abgelegt, die man in Thunderbird
-  als lokalen Kalender einbindet. Ohne Server, ohne Zugangsdaten.
+* **ics**    - alle offenen Termine stehen gesammelt in EINER Datei
+  (`denkzettel.ics`), die man einmal in Thunderbird als Kalender
+  einbindet. Ohne Server, ohne Zugangsdaten. Eine Datei pro Notiz wäre
+  hier die falsche Form gewesen: Thunderbird bindet genau eine feste
+  Datei ein, keinen ganzen Ordner - deshalb wird diese eine Datei bei
+  jeder Änderung komplett aus der Datenbank neu geschrieben, statt in
+  ihr herumzueditieren.
 
 Standard ist **auto**: erst CalDAV, und wenn der Server nicht erreichbar
 ist, ersatzweise die Datei. Die Notiz merkt sich dann, dass der Termin
@@ -22,7 +27,6 @@ weniger auf zwei verschiedenen Distributionen.
 from __future__ import annotations
 
 import base64
-import re
 import socket
 import ssl
 import urllib.error
@@ -83,8 +87,14 @@ def _utc(wert: datetime) -> str:
     return wert.astimezone(timezone.utc).strftime("%Y%m%dT%H%M%SZ")
 
 
-def ics_bauen(notiz: store.Notiz, cfg, uid: str | None = None) -> tuple[str, str]:
-    """VEVENT für eine Notiz erzeugen. Gibt (uid, ics-Text) zurück."""
+def _vevent(notiz: store.Notiz, cfg, uid: str | None = None) -> tuple[str, list[str]]:
+    """Nur der VEVENT-Block, ohne VCALENDAR-Rahmen.
+
+    Baustein für zwei Verwendungen: `ics_bauen()` verpackt genau einen
+    davon für den CalDAV-Server (der will pro Termin eine eigene
+    Ablage), `sammelkalender_schreiben()` reiht mehrere davon in eine
+    gemeinsame Datei für Thunderbird.
+    """
     if notiz.faellig is None:
         raise ValueError("Notiz ohne Wiedervorlage")
     uid = uid or notiz.kalender_uid or f"{uuid.uuid4()}@denkzettel"
@@ -98,10 +108,6 @@ def ics_bauen(notiz: store.Notiz, cfg, uid: str | None = None) -> tuple[str, str
     erinnerung = config.zahl(cfg, "kalender", "erinnerung_minuten", 10)
 
     zeilen = [
-        "BEGIN:VCALENDAR",
-        "VERSION:2.0",
-        "PRODID:-//Denkzettel//DE",
-        "CALSCALE:GREGORIAN",
         "BEGIN:VEVENT",
         f"UID:{uid}",
         f"DTSTAMP:{_utc(datetime.now())}",
@@ -124,7 +130,16 @@ def ics_bauen(notiz: store.Notiz, cfg, uid: str | None = None) -> tuple[str, str
             f"TRIGGER:-PT{erinnerung}M",
             "END:VALARM",
         ]
-    zeilen += ["END:VEVENT", "END:VCALENDAR"]
+    zeilen.append("END:VEVENT")
+    return uid, zeilen
+
+
+def ics_bauen(notiz: store.Notiz, cfg, uid: str | None = None) -> tuple[str, str]:
+    """Ein vollständiger Kalender mit genau einem Termin - für den
+    CalDAV-Server, der pro Termin eine eigene Ablage will."""
+    uid, vevent = _vevent(notiz, cfg, uid)
+    zeilen = ["BEGIN:VCALENDAR", "VERSION:2.0", "PRODID:-//Denkzettel//DE",
+              "CALSCALE:GREGORIAN", *vevent, "END:VCALENDAR"]
     return uid, "\r\n".join(_falten(z) for z in zeilen) + "\r\n"
 
 
@@ -244,14 +259,35 @@ def verbindung_pruefen(cfg) -> tuple[bool, str]:
     return True, f"Kalender erreichbar: {url}"
 
 
-# -- Datei-Weg --------------------------------------------------------
+# -- Datei-Weg: eine gemeinsame Sammel-Datei für Thunderbird ----------
 
-def ics_ablegen(cfg, notiz: store.Notiz, uid: str, ics: str) -> Path:
-    ordner = config.ics_verzeichnis(cfg)
-    ordner.mkdir(parents=True, exist_ok=True)
-    stamm = re.sub(r"[^\w.-]", "_", f"{notiz.faellig:%Y-%m-%d}-{uid.split('@')[0][:8]}")
-    ziel = ordner / f"{stamm}.ics"
-    ziel.write_text(ics, encoding="utf-8")
+SAMMELDATEI = "denkzettel.ics"
+
+
+def sammelkalender_pfad(cfg) -> Path:
+    return config.ics_verzeichnis(cfg) / SAMMELDATEI
+
+
+def sammelkalender_schreiben(cfg, speicher: store.Speicher) -> Path:
+    """Alle noch nicht auf einem Server stehenden Wiedervorlagen in EINE
+    Datei schreiben.
+
+    Wird bei jeder Änderung komplett aus der Datenbank neu geschrieben,
+    nicht nachträglich in der bestehenden Datei gesucht und ersetzt -
+    das ist einfacher und garantiert richtig. Muss vom aufrufenden
+    Programmteil (nicht von hier) im selben Thread laufen, der die
+    Datenbankverbindung angelegt hat - `sqlite3` erlaubt keine
+    Mitbenutzung aus einem Hintergrund-Thread.
+    """
+    ziel = sammelkalender_pfad(cfg)
+    ziel.parent.mkdir(parents=True, exist_ok=True)
+    zeilen = ["BEGIN:VCALENDAR", "VERSION:2.0", "PRODID:-//Denkzettel//DE",
+              "CALSCALE:GREGORIAN"]
+    for notiz in speicher.offene_kalendereintraege():
+        _, vevent = _vevent(notiz, cfg, notiz.kalender_uid)
+        zeilen += vevent
+    zeilen.append("END:VCALENDAR")
+    ziel.write_text("\r\n".join(_falten(z) for z in zeilen) + "\r\n", encoding="utf-8")
     return ziel
 
 
@@ -261,7 +297,11 @@ def eintragen(cfg, notiz: store.Notiz) -> tuple[str, str]:
     """Termin eintragen. Gibt (Status, Klartext-Meldung) zurück.
 
     Der Status wandert in die Datenbank: `caldav` ist erledigt, `ics`
-    heißt „liegt als Datei vor, gehört noch auf den Server“.
+    heißt „gehört in die Sammel-Termindatei, steht noch nicht auf dem
+    Server“. Schreibt bewusst KEINE Datei selbst - diese Funktion läuft
+    bei der Aufnahme im Hintergrund-Thread, und die Sammel-Datei braucht
+    Zugriff auf die Datenbank, die nur im Hauptthread sicher ist. Der
+    Aufrufer ruft danach im Hauptthread `sammelkalender_schreiben()`.
     """
     if notiz.faellig is None:
         return store.OHNE, ""
@@ -285,22 +325,20 @@ def eintragen(cfg, notiz: store.Notiz) -> tuple[str, str]:
                 notiz.kalender_status = store.FEHLER
                 notiz.kalender_ziel = meldung
                 return store.FEHLER, meldung
-            datei = ics_ablegen(cfg, notiz, uid, ics)
             notiz.kalender_status = store.ICS
-            notiz.kalender_ziel = str(datei)
-            return store.ICS, (f"{meldung}\nDer Termin liegt solange als Datei "
-                               f"in {datei.parent} und wird beim nächsten "
-                               f"Start nachgetragen.")
+            notiz.kalender_ziel = str(sammelkalender_pfad(cfg))
+            return store.ICS, (f"{meldung}\nDer Termin liegt solange in der "
+                               f"Sammel-Termindatei {sammelkalender_pfad(cfg)} "
+                               f"und wird beim nächsten Start nachgetragen.")
 
     if modus == "caldav":
         notiz.kalender_status = store.FEHLER
         notiz.kalender_ziel = "CalDAV ist nicht eingerichtet."
         return store.FEHLER, notiz.kalender_ziel
 
-    datei = ics_ablegen(cfg, notiz, uid, ics)
     notiz.kalender_status = store.ICS
-    notiz.kalender_ziel = str(datei)
-    return store.ICS, f"Als Termindatei abgelegt: {datei}"
+    notiz.kalender_ziel = str(sammelkalender_pfad(cfg))
+    return store.ICS, f"In der Sammel-Termindatei eingetragen: {sammelkalender_pfad(cfg)}"
 
 
 def nachtragen(cfg, speicher: store.Speicher) -> tuple[int, int, list[str]]:
@@ -320,11 +358,12 @@ def nachtragen(cfg, speicher: store.Speicher) -> tuple[int, int, list[str]]:
             schlecht += 1
             meldungen.append(f"Notiz {notiz.id}: {_klartext(e, ziel_sicher(cfg))}")
             continue
-        # Die Ersatzdatei wird erst gelöscht, wenn der Server sie hat.
-        if notiz.kalender_status == store.ICS and notiz.kalender_ziel:
-            Path(notiz.kalender_ziel).unlink(missing_ok=True)
         speicher.kalender_setzen(notiz.id, store.CALDAV, ziel, uid)
         gut += 1
+    if gut:
+        # Erfolgreich nachgereichte Termine sollen aus der Sammel-Datei
+        # verschwinden - sie stehen jetzt auf dem Server.
+        sammelkalender_schreiben(cfg, speicher)
     return gut, schlecht, meldungen
 
 
