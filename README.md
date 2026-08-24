@@ -264,6 +264,14 @@ jemand anderes einsteht. Näheres in
 
 Erste Fassung.
 
+* **Startmenü zeigt jetzt die gefüllte Kreisscheibe statt der
+  durchsichtigen Strichzeichnung** (2026-08-24, Stephans Wunsch). Die
+  Farbwahl ist dieselbe wie in den READMEs: dunkle Scheibe auf hellem
+  Panel. `assets/icon-bauen.py` erzeugt dafür `menue-*.png` in jeder
+  Icon-Theme-Größe aus derselben Farbe wie `app-icon-light.png`, und
+  `install.sh` installiert die statt der transparenten `icon-*.png` ins
+  Startmenü. Ein Menü zeigt immer nur eine feste Fassung, kein
+  automatisches Umschalten nach Systemthema.
 * **Erstes echtes Diktat über die Webcam gelungen** (2026-08-24), nach
   zwei Korrekturen. Die Aufnahme selbst war nie das Problem - der
   Pegelverlauf zeigte von Anfang an ein sauberes Sprachmuster. Erstens

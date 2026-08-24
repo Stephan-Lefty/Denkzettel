@@ -264,6 +264,14 @@ Details in
 
 First release.
 
+* **The application menu now shows the filled circle instead of the
+  transparent line drawing** (2026-08-24, Stephan's request). Same
+  colour choice as in the READMEs: the dark circle on a light panel.
+  `assets/icon-bauen.py` generates `menue-*.png` at every icon-theme
+  size using the same colour as `app-icon-light.png`, and `install.sh`
+  installs those instead of the transparent `icon-*.png` into the
+  application menu. A menu always shows one fixed version, no automatic
+  switching by system theme.
 * **First real dictation over the webcam succeeded** (2026-08-24), after
   two fixes. The recording itself was never the problem - the level
   trace showed a clean speech pattern from the start. First, the

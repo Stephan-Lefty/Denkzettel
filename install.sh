@@ -224,10 +224,13 @@ LAUNCHER
     chmod +x "$BIN/denkzettel"
 
     echo "-- Symbole"
+    # menue-*.png statt der durchsichtigen icon-*.png: ein Startmenü zeigt
+    # immer nur eine Fassung, kein automatisches Umschalten nach
+    # Systemthema - siehe assets/icon-bauen.py fuer die Farbwahl.
     for GROESSE in 512 256 128 64 48 32; do
-        if [[ -f "$QUELLE/assets/icon-$GROESSE.png" ]]; then
+        if [[ -f "$QUELLE/assets/menue-$GROESSE.png" ]]; then
             mkdir -p "$ICONS/${GROESSE}x${GROESSE}/apps"
-            cp "$QUELLE/assets/icon-$GROESSE.png" \
+            cp "$QUELLE/assets/menue-$GROESSE.png" \
                "$ICONS/${GROESSE}x${GROESSE}/apps/denkzettel.png"
         fi
     done

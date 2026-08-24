@@ -33,6 +33,16 @@ N = 512 * S      # Arbeitsgröße
 CYAN = (0, 173, 212)      # aus dem DialOS-Icon abgetastet
 GRUEN = (98, 197, 0)
 NAVY = (13, 27, 51)       # Hintergrund der dunklen DialOS-Variante
+WEISS = (255, 255, 255)
+
+# Stephans Entscheidung (2026-08-24): die dunkle Kreisscheibe auf hellem
+# Hintergrund, die helle auf dunklem - umgekehrt zur naheliegenden
+# Zuordnung. „app-icon-light.png“ heißt weiterhin „Datei für helle
+# Umgebungen“, ihr Bildinhalt ist aber die dunkle Scheibe. Das Startmenü
+# bekommt dieselbe Wahl: „menue-*.png“ übernimmt die Farbe von
+# GRUND_HELL, weil Stephans Panel hell ist.
+GRUND_HELL = NAVY
+GRUND_DUNKEL = WEISS
 
 # Bereich der drei Schallwellen in der Vorlage (512er-Koordinaten)
 WELLEN = (306, 175, 425, 358)
@@ -194,10 +204,15 @@ def main():
 
     linien, scheibe = zeichnung(args.vorlage)
 
-    speichern(linien, scheibe, (255, 255, 255), ASSETS / "app-icon-light.png", 512)
-    speichern(linien, scheibe, NAVY, ASSETS / "app-icon-dark.png", 512)
+    speichern(linien, scheibe, GRUND_HELL, ASSETS / "app-icon-light.png", 512)
+    speichern(linien, scheibe, GRUND_DUNKEL, ASSETS / "app-icon-dark.png", 512)
     for g in GROESSEN:
         speichern(linien, scheibe, None, ASSETS / f"icon-{g}.png", g)
+        # Fürs Startmenü: dieselbe Farbe wie app-icon-light.png, in jeder
+        # Icon-Theme-Größe. Ein Menü zeigt immer nur eine Fassung, kein
+        # automatisches Umschalten nach Systemthema - Stephans Panel ist
+        # hell, deshalb die dunkle Scheibe.
+        speichern(linien, scheibe, GRUND_HELL, ASSETS / f"menue-{g}.png", g)
     print(f"Icons geschrieben nach {ASSETS}")
 
 
