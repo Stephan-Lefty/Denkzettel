@@ -9,14 +9,10 @@ down rather than deleted, with the date they were completed.
 
 ### Must happen before real use
 
-- [ ] **Combined calendar file never opened in real Thunderbird.** The
-  file follows RFC 5545 (folding, several VEVENTs in one VCALENDAR,
-  create/delete/CalDAV-transition tested against the real database) -
-  but Thunderbird has never actually displayed it as a subscribed
-  calendar. Open: whether the exact steps in the README (File → New →
-  Calendar → On the Network → iCalendar (ICS) → `file://` path) match
-  Stephan's Thunderbird version, whether the reminder (VALARM) arrives,
-  whether the automatic refresh interval is reliable.
+- [ ] **Whether the reminder (VALARM) actually fires at the right time
+  is still unobserved** - that needs the configured lead time (10
+  minutes by default) to actually elapse once, not just a check of the
+  file.
 - [ ] **Model load time.** Every dictation costs about 27 seconds,
   almost regardless of length - that is loading `large-v3-turbo`. For a
   short thought that is a lot. To try: compare smaller models
@@ -139,6 +135,14 @@ down rather than deleted, with the date they were completed.
   must not be used across threads. So `eintragen()` no longer writes any
   file itself; only the caller on the main thread does
   (`_kalender_fertig`, via a Qt signal callback).
+- [x] **Confirmed in real Thunderbird, not just against the file.** At
+  first no appointment showed up - not a setup mistake, but the only
+  appointment in the file was dated August 10th, 14 days in the past,
+  while the calendar view was on "Today" (August 24th). After switching
+  to the right date, or clicking "Synchronize", the appointments were
+  there. Checked the profile beforehand as a precaution: the
+  "denkzettel" calendar was correctly registered, enabled, with the
+  right `file://` address, not read-only or disabled.
 
 ### Foundation (2026-08-23)
 

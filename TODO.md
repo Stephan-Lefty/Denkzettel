@@ -10,14 +10,10 @@ dem es fertig wurde.
 
 ### Muss vor dem ersten echten Einsatz passieren
 
-- [ ] **Sammel-Termindatei noch nie in echtem Thunderbird geöffnet.**
-  Die Datei ist gegen RFC 5545 geprüft (Faltung, mehrere VEVENT in einem
-  VCALENDAR, Anlegen/Löschen/CalDAV-Übergang gegen die echte Datenbank
-  getestet) - aber noch nie hat Thunderbird sie tatsächlich eingebunden
-  angezeigt. Offen: ob der genaue Weg im README (Datei → Neu → Kalender
-  → Im Netzwerk → iCalendar (ICS) → `file://`-Pfad) auf Stephans
-  Thunderbird-Version so stimmt, ob die Erinnerung (VALARM) ankommt, ob
-  der automatische Aktualisierungs-Takt zuverlässig greift.
+- [ ] **Ob die Erinnerung (VALARM) tatsächlich zum richtigen Zeitpunkt
+  anschlägt, ist noch nicht beobachtet** - dafür muss der eingestellte
+  Vorlauf (Standard 10 Minuten) einmal real abgewartet werden, nicht nur
+  die Datei geprüft werden.
 - [ ] **Ladezeit des Modells.** Jedes Diktat kostet rund 27 Sekunden,
   fast unabhängig von der Länge - das ist das Laden von
   `large-v3-turbo`. Für einen kurzen Gedanken ist das viel. Zu prüfen:
@@ -147,6 +143,14 @@ dem es fertig wurde.
   Deshalb schreibt `eintragen()` selbst keine Datei mehr, sondern nur
   noch der Aufrufer im Hauptthread (`_kalender_fertig`, per
   Qt-Signal-Rückruf).
+- [x] **In echtem Thunderbird bestätigt, nicht nur an der Datei geprüft.**
+  Erst zeigte sich kein Termin - keine Fehleinrichtung, sondern der
+  einzige Termin in der Datei stand auf dem 10. August, 14 Tage in der
+  Vergangenheit, während die Kalenderansicht auf „Heute" (24. August)
+  stand. Nach Umschalten auf das richtige Datum bzw. „Synchronisieren"
+  waren die Termine da. Zur Sicherheit vorher im Profil nachgesehen:
+  Kalender „denkzettel" korrekt registriert, aktiviert, richtige
+  `file://`-Adresse, nicht schreibgeschützt deaktiviert.
 
 ### Grundgerüst (2026-08-23)
 
